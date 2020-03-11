@@ -202,7 +202,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id=" control_lower_z">
+              <object class="GtkButton" id="control_lower_z">
                 <property name="label" translatable="yes">Lower Z</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>

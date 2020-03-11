@@ -86,5 +86,11 @@ gui_status gui_error_handler( gui_context * context, gui_error_type type );
 //Main Window
 gboolean on_main_window_destroy_callback( GtkWidget *object, gpointer user_data );
 
-//Buttons
+//Home Buttons
 gboolean on_control_home_x_pressed_callback( GtkWidget *object, gpointer user_data );
+gboolean on_control_home_y_pressed_callback( GtkWidget *object, gpointer user_data );
+gboolean on_control_home_z_pressed_callback( GtkWidget *object, gpointer user_data );
+
+//Z's Buttons
+gboolean on_control_raise_z_pressed_callback( GtkWidget *object, gpointer user_data );
+gboolean on_control_lower_z_pressed_callback( GtkWidget *object, gpointer user_data );

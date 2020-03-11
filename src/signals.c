@@ -10,10 +10,10 @@ void gui_connect_signals( gui_context * context )
     }
     
     // ###########
-    // Main Window
+    // Windows
     // ###########
 
-    //Get window from builder
+    //Get Main Window from builder
     context->main_window = GTK_WINDOW(
         gtk_builder_get_object( 
             context->builder, 
@@ -27,9 +27,24 @@ void gui_connect_signals( gui_context * context )
         G_CALLBACK(on_main_window_destroy_callback),
         context
     );
+
     // #######
     // Buttons
     // #######
+
+    //Control connect Button
+    context->control_connect = GTK_BUTTON(
+        gtk_builder_get_object(
+            context->builder,
+            "control_connect"
+        )
+    );
+    g_signal_connect(
+        context->control_connect,
+        "clicked",
+        G_CALLBACK(on_control_connect_pressed_callback),
+        context
+    );
     
     //Control Home X Button
     context->control_home_x = GTK_BUTTON(
@@ -38,11 +53,66 @@ void gui_connect_signals( gui_context * context )
             "control_home_x"
         )
     );
-    //Pressed signal
     g_signal_connect(
         context->control_home_x,
         "clicked",
         G_CALLBACK(on_control_home_x_pressed_callback),
+        context
+    );
+    
+    //Control Home Y Button
+    context->control_home_y = GTK_BUTTON(
+        gtk_builder_get_object(
+            context->builder,
+            "control_home_y"
+        )
+    );
+    g_signal_connect(
+        context->control_home_y,
+        "clicked",
+        G_CALLBACK(on_control_home_y_pressed_callback),
+        context
+    );
+
+    //Control Home Z Button
+    context->control_home_z = GTK_BUTTON(
+        gtk_builder_get_object(
+            context->builder,
+            "control_home_z"
+        )
+    );
+    g_signal_connect(
+        context->control_home_z,
+        "clicked",
+        G_CALLBACK(on_control_home_z_pressed_callback),
+        context
+    );
+
+    //Raise Z Button
+    context->control_raise_z = GTK_BUTTON(
+        gtk_builder_get_object(
+            context->builder,
+            "control_raise_z"
+        )
+    );
+    g_signal_connect(
+        context->control_raise_z,
+        "clicked",
+        G_CALLBACK(on_control_raise_z_pressed_callback),
+        context
+    );
+
+    //Lower Z Button
+    context->control_lower_z = GTK_BUTTON(
+        gtk_builder_get_object(
+            context->builder,
+            "control_lower_z"
+        )
+    );
+    g_signal_connect(
+        context->control_lower_z,
+        "clicked",
+        G_CALLBACK(on_control_lower_z_pressed_callback),
         context
     );
 

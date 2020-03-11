@@ -10,7 +10,7 @@ void log_printf( GtkTextView * tv, const char * format, ... )
 
     //1000 for buffer size (+1 for the \0) and +12 for the time
     static char buffer[1013] = {0};
-    const char * tgt = get_time( buffer );
+    char * tgt = get_time( buffer );
     vsnprintf( tgt, 1000, format, arg );
 
     log_append_to_textview( tv, buffer );
