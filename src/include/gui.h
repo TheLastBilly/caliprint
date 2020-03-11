@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdarg.h>
 
 #include <gtk/gtk.h>
 #include <gmodule.h>
@@ -59,6 +60,7 @@ typedef struct gui_context
     gui_status status;
 } gui_context;
 
+extern bool gtk_is_init;
 
 gui_status gui_init( gui_context * context, int * argc, const char *** argv );
 void gui_end();
@@ -70,7 +72,12 @@ gui_status gui_get_status( gui_context * context );
 const char * gui_get_status_description( gui_status status );
 const char * gui_get_internal_status_description( gui_context * context );
 
+void gui_connect_signals( gui_context * context );
+
 bool gui_has_errors( gui_context * context );
+
+void gui_set_status(gui_context * context, gui_status status );
+gui_status gui_error_handler( gui_context * context, gui_error_type type );
 
 // #########
 // Callbacks
@@ -78,3 +85,6 @@ bool gui_has_errors( gui_context * context );
 
 //Main Window
 gboolean on_main_window_destroy_callback( GtkWidget *object, gpointer user_data );
+
+//Buttons
+gboolean on_control_home_x_pressed_callback( GtkWidget *object, gpointer user_data );

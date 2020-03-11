@@ -1,10 +1,6 @@
 #include "include/gui.h"
 
-static bool gtk_is_init = false;
-
-static void gui_set_status(gui_context * context, gui_status status );
-static void gui_connect_signals( gui_context * context );
-static gui_status gui_error_handler( gui_context * context, gui_error_type type );
+bool gtk_is_init = false;
 
 gui_status gui_init( gui_context * context, int * argc, const char *** argv )
 {
@@ -100,36 +96,6 @@ void gui_set_status( gui_context * context, gui_status status )
     context->status = status;
 }
 
-void gui_connect_signals( gui_context * context )
-{
-    //Check if GTK is initialized
-    if( !gtk_is_init )
-    {
-        gui_set_status(context,  GTK_NOT_INIT);
-        return;
-    }
-    
-    // ###########
-    // Main Window
-    // ###########
-
-    //Get window from builder
-    context->main_window = GTK_WINDOW(
-        gtk_builder_get_object( 
-            context->builder, 
-            "main_window"
-        )
-    );
-    //Connect destroy signal for window
-    g_signal_connect(
-        context->main_window,
-        "destroy",
-        G_CALLBACK(on_main_window_destroy_callback),
-        &context
-    );
-
-}
-
 gui_status gui_get_status( gui_context * context )
 {
     return context->status;
@@ -166,7 +132,7 @@ const char * gui_get_internal_status_description( gui_context * context )
     return gui_get_status_description( gui_get_status( context ) );
 }
 
-static gui_status gui_error_handler( gui_context * context, gui_error_type type )
+gui_status gui_error_handler( gui_context * context, gui_error_type type )
 {
     bool end_gtk = false;
     
