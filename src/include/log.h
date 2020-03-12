@@ -9,5 +9,7 @@
 
 #include <gtk/gtk.h>
 #include <gmodule.h>
+#include <glib.h>
+#include <glib/gprintf.h>
 
 void log_printf( GtkTextView * tv, const char * format, ... );

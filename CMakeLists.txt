@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project ("caliprint" VERSION 0.1)
 
-add_compile_options(-std=c11 -Wall)
+add_compile_options(-std=c11 -Wall -O2 -g)
 
 include(CPack)
 

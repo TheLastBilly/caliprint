@@ -4,8 +4,9 @@ serial_driver * serial_create_driver( const char * port, serial_speed speed, boo
 {
     serial_driver * driver = (serial_driver *) calloc( 1, sizeof(serial_driver) );
     driver->status = NO_SERIAL_ERROR;
-    
-    driver->port = (char *) malloc( strlen(port) + 1 );    //Copy port to driver
+
+    //Copy port to driver
+    driver->port = (char *) malloc( strlen(port) + 1 );
     sprintf( driver->port, "%s", port );
 
     driver->is_connected = false;
@@ -170,7 +171,7 @@ const char * serial_get_buffer( serial_driver * driver, size_t * size )
 
 const char * serial_get_port( serial_driver * driver )
 {
-    if( driver == NULL )
-        return NULL;
+    if( driver == NULL || driver->port == NULL)
+        return "N/A";
     return (const char *) driver->port;
 }

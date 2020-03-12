@@ -43,11 +43,10 @@ gboolean on_control_connect_pressed_callback( GtkWidget *object, gpointer user_d
     //Connect
     if( context->serial != NULL )
     {
-        serial_free_driver( context->serial );   
-        context->serial = NULL;
+        serial_free_driver( context->serial );
     }
     
-    //context->serial = serial_create_driver( "/dev/ttyUSB0", SP115200, false );
+    context->serial = serial_create_driver( "/dev/ttyUSB0", SP115200, false );
     if( serial_get_status( context->serial ) != SERIAL_OK )
     {
         log_printf( 
@@ -84,7 +83,7 @@ gboolean on_control_connect_pressed_callback( GtkWidget *object, gpointer user_d
 gboolean on_control_preferences_pressed_callback( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    log_printf(context->control_log, "Not implemented!\n");
+    log_printf(context->control_log, "Cannot connect to serial port (null)\n");
     return true;
 }
 

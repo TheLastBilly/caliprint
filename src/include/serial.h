@@ -12,6 +12,9 @@
 #include <termios.h>
 #include <unistd.h>
 
+#include <glib.h>
+#include <glib/gprintf.h>
+
 #define SERIAL_MAX_BUFFER 1000
 
 extern int errno;
