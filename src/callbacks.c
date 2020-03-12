@@ -34,7 +34,7 @@ gboolean on_control_connect_pressed_callback( GtkWidget *object, gpointer user_d
 
         gtk_button_set_label(
             context->control_connect,
-            "connect"
+            "Connect"
         );
 
         return true;
