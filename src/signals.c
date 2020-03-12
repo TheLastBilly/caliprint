@@ -45,6 +45,20 @@ void gui_connect_signals( gui_context * context )
         G_CALLBACK(on_control_connect_pressed_callback),
         context
     );
+
+    //Control preferences Button
+    context->control_preferences = GTK_BUTTON(
+        gtk_builder_get_object(
+            context->builder,
+            "control_preferences"
+        )
+    );
+    g_signal_connect(
+        context->control_preferences,
+        "clicked",
+        G_CALLBACK(on_control_preferences_pressed_callback),
+        context
+    );
     
     //Control Home X Button
     context->control_home_x = GTK_BUTTON(

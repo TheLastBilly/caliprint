@@ -55,7 +55,8 @@ typedef struct gui_context
         * control_log_sw;
 
     bool
-        is_initialized;
+        is_initialized,
+        is_connected;
     
     gui_status status;
 } gui_context;
@@ -79,9 +80,9 @@ bool gui_has_errors( gui_context * context );
 void gui_set_status(gui_context * context, gui_status status );
 gui_status gui_error_handler( gui_context * context, gui_error_type type );
 
-// #########
-// Callbacks
-// #########
+// ###################################
+// ############ Callbacks ############
+// ###################################
 
 //Main Window
 gboolean on_main_window_destroy_callback( GtkWidget *object, gpointer user_data );
@@ -94,3 +95,9 @@ gboolean on_control_home_z_pressed_callback( GtkWidget *object, gpointer user_da
 //Z's Buttons
 gboolean on_control_raise_z_pressed_callback( GtkWidget *object, gpointer user_data );
 gboolean on_control_lower_z_pressed_callback( GtkWidget *object, gpointer user_data );
+
+//Connect button
+gboolean on_control_connect_pressed_callback( GtkWidget *object, gpointer user_data );
+
+//Preference Button
+gboolean on_control_preferences_pressed_callback( GtkWidget *object, gpointer user_data );
