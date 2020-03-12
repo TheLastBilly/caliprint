@@ -18,21 +18,22 @@ extern int errno;
 
 typedef enum serial_status
 {
-    IS_INIT,
+    NO_SERIAL_ERROR,
     SOCKET_OPEN_ERROR,
     SOCKET_ATTR_GET_ERROR,
     SOCKET_ATTR_SET_ERROR,
     SEND_ERROR,
     READ_ERROR,
     NOT_CONNECTED,
-    A_OK,
+    SERIAL_OK,
 } serial_status;
 
 typedef struct serial_driver 
 {
     int socket;
     bool
-        is_connected;
+        is_connected,
+        should_block;
     char * port;
     char buffer[SERIAL_MAX_BUFFER];
     serial_status status;
@@ -56,4 +57,8 @@ serial_status serial_receive( serial_driver * driver );
 serial_status serial_send( serial_driver * driver, char * str, size_t size );
 serial_status serial_recv( serial_driver * driver, char * str, size_t size );
 
-char * serial_get_buffer( serial_driver * driver, size_t * size );
+bool serial_is_connected( serial_driver * driver );
+serial_status serial_get_status( serial_driver * driver );
+const char * serial_get_port( serial_driver * driver );
+
+const char * serial_get_buffer( serial_driver * driver, size_t * size );

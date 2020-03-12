@@ -19,7 +19,64 @@ gboolean on_main_window_destroy_callback( GtkWidget *object, gpointer user_data 
 gboolean on_control_connect_pressed_callback( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    log_printf(context->control_log, "Not implemented!\n");
+
+    //Disconnect
+    if( context->serial != NULL && serial_is_connected( context->serial ) )
+    {
+        log_printf( 
+            context->control_log, 
+            "Disconnecting from %s...\n", 
+            serial_get_port( context->serial )
+        );
+
+        serial_free_driver( context->serial );
+        context->serial = NULL;
+
+        gtk_button_set_label(
+            context->control_connect,
+            "connect"
+        );
+
+        return true;
+    }
+
+    //Connect
+    if( context->serial != NULL )
+    {
+        serial_free_driver( context->serial );   
+        context->serial = NULL;
+    }
+    
+    //context->serial = serial_create_driver( "/dev/ttyUSB0", SP115200, false );
+    if( serial_get_status( context->serial ) != SERIAL_OK )
+    {
+        log_printf( 
+            context->control_log, 
+            "Cannot connect to serial port %s\n", 
+            serial_get_port( context->serial )
+        );
+        gtk_button_set_label(
+            context->control_connect,
+            "Connect"
+        );
+
+        return true;
+    }
+    else
+    {
+        log_printf( 
+            context->control_log, 
+            "Connected to %s\n",
+            serial_get_port( context->serial )
+        );
+
+        gtk_button_set_label(
+            context->control_connect,
+            "Disconnect"
+        );
+    }
+
+
     return true;
 }
 

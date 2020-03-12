@@ -5,7 +5,7 @@ void gui_connect_signals( gui_context * context )
     //Check if GTK is initialized
     if( !gtk_is_init )
     {
-        gui_set_status(context,  GTK_NOT_INIT);
+        gui_set_status(context, GTK_NOT_INIT);
         return;
     }
     

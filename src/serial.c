@@ -3,7 +3,11 @@
 serial_driver * serial_create_driver( const char * port, serial_speed speed, bool should_block )
 {
     serial_driver * driver = (serial_driver *) calloc( 1, sizeof(serial_driver) );
+    driver->status = NO_SERIAL_ERROR;
     
+    driver->port = (char *) malloc( strlen(port) + 1 );    //Copy port to driver
+    sprintf( driver->port, "%s", port );
+
     driver->is_connected = false;
     
     driver->socket = open( port, O_RDWR | O_NOCTTY | O_SYNC );
@@ -46,11 +50,9 @@ serial_driver * serial_create_driver( const char * port, serial_speed speed, boo
         return driver;
     }
 
-    driver->port = (char *) malloc( strlen(port) + 1 );    //Copy port to driver
-    sprintf( driver->port, "%s", port );
-
     driver->is_connected = true;
-    driver->status = A_OK;
+    driver->status = SERIAL_OK;
+    driver->should_block = should_block;
     
     return driver;
 }
@@ -74,6 +76,8 @@ void serial_free_driver( serial_driver * driver )
 
 serial_status serial_printf( serial_driver * driver, char * format, ... )
 {
+    if( driver == NULL )
+        return NO_SERIAL_ERROR;
     if(!driver->is_connected)
         return NOT_CONNECTED;
     
@@ -89,11 +93,15 @@ serial_status serial_printf( serial_driver * driver, char * format, ... )
 
 serial_status serial_receive( serial_driver * driver )
 {
+    if( driver == NULL )
+        return NO_SERIAL_ERROR;
     return serial_recv( driver, driver->buffer, SERIAL_MAX_BUFFER );
 }
 
 serial_status serial_send( serial_driver * driver, char * str, size_t size )
 {
+    if( driver == NULL )
+        return NO_SERIAL_ERROR;
     if( !driver->is_connected )
         return NOT_CONNECTED;
     
@@ -102,11 +110,13 @@ serial_status serial_send( serial_driver * driver, char * str, size_t size )
         return SEND_ERROR;
     }
 
-    return A_OK;
+    return SERIAL_OK;
 }
 
 serial_status serial_recv( serial_driver * driver, char * str, size_t size )
 {
+    if( driver == NULL )
+        return NO_SERIAL_ERROR;
     if( !driver->is_connected )
         return NOT_CONNECTED;
     
@@ -121,22 +131,46 @@ serial_status serial_recv( serial_driver * driver, char * str, size_t size )
         )
         {
             if (
-                errno != EAGAIN ||
-                errno != EWOULDBLOCK
+                (errno != EAGAIN ||
+                errno != EWOULDBLOCK) &&
+                driver->should_block
             )
             {
                 return READ_ERROR;
             }
 
-            return A_OK;
+            return SERIAL_OK;
         }
     }
     
-    return A_OK;
+    return SERIAL_OK;
 }
 
-char * serial_get_buffer( serial_driver * driver, size_t * size )
+serial_status serial_get_status( serial_driver * driver )
 {
+    if( driver == NULL )
+        return NO_SERIAL_ERROR;
+    return driver->status;
+}
+
+bool serial_is_connected( serial_driver * driver )
+{
+    if( driver == NULL )
+        return false;
+    return driver->is_connected;
+}
+
+const char * serial_get_buffer( serial_driver * driver, size_t * size )
+{
+    if( driver == NULL )
+        return NULL;
     *size = driver->buffer_size; 
-    return driver->buffer;
+    return (const char *) driver->buffer;
+}
+
+const char * serial_get_port( serial_driver * driver )
+{
+    if( driver == NULL )
+        return NULL;
+    return (const char *) driver->port;
 }

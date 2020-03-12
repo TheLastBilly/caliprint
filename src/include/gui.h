@@ -9,14 +9,14 @@
 #include <gtk/gtk.h>
 #include <gmodule.h>
 
+#include "serial.h"
+
 typedef enum gui_status
 {
-    IS_INIT,
-    NOT_INIT,
     GTK_NOT_INIT,
     NO_FILE_ERROR,
     FILE_ACCESS_ERROR,
-    A_OK,
+    GUI_OK,
 } gui_status;
 
 typedef enum gui_error_type
@@ -57,6 +57,9 @@ typedef struct gui_context
     bool
         is_initialized,
         is_connected;
+    
+    serial_driver *
+        serial;
     
     gui_status status;
 } gui_context;

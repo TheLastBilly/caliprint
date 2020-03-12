@@ -8,8 +8,9 @@ void log_printf( GtkTextView * tv, const char * format, ... )
     va_list arg;
     va_start( arg, format );
 
-    //1000 for buffer size (+1 for the \0) and +12 for the time
-    static char buffer[1013] = {0};
+    //1000 for buffer size (+2 for the \n and \0) and +12 for the time
+    static char buffer[1014] = {0};
+    buffer[0] = 0;
     char * tgt = get_time( buffer );
     vsnprintf( tgt, 1000, format, arg );
 

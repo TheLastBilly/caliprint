@@ -33,7 +33,7 @@ gui_status gui_init( gui_context * context, int * argc, const char *** argv )
 
     gtk_main();
 
-    return A_OK;
+    return GUI_OK;
 }
 
 void gui_end()
@@ -105,12 +105,6 @@ const char * gui_get_status_description( gui_status status )
 {
     switch (status)
     {
-    case IS_INIT:
-        return "GUI is initialized";
-        break;
-    case NOT_INIT:
-        return "GUI is not initialized";
-        break;
     case GTK_NOT_INIT:
         return "GTK is not initialized";
         break;
@@ -120,7 +114,7 @@ const char * gui_get_status_description( gui_status status )
     case FILE_ACCESS_ERROR:
         return "Cannot access GUI (builder) file";
         break;    
-    case A_OK:
+    case GUI_OK:
         return "GUI OK";
         break;    
     }
@@ -157,7 +151,7 @@ gui_status gui_error_handler( gui_context * context, gui_error_type type )
 bool gui_has_errors( gui_context * context )
 {
     gui_status st = context->status;
-    if(st == NOT_INIT || st == GTK_NOT_INIT || st == NO_FILE_ERROR || st == FILE_ACCESS_ERROR )
+    if( st == GTK_NOT_INIT || st == NO_FILE_ERROR || st == FILE_ACCESS_ERROR )
         return true;
     return false;        
 }
