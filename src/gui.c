@@ -49,7 +49,7 @@ gui_context * gui_create_context( const char * builder_file_path )
 {
     //Allocate and return context
     gui_context * context =
-        ( gui_context * ) malloc( sizeof(gui_context) );
+        ( gui_context * ) calloc( 1, sizeof(gui_context) );
     
     //Check for glade file    
     if( builder_file_path == NULL )
@@ -74,6 +74,8 @@ gui_context * gui_create_context( const char * builder_file_path )
         "%s", 
         builder_file_path
     );
+
+    context->status = GUI_OK;
 
     return context;
 }
