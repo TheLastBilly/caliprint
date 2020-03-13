@@ -10,6 +10,8 @@
 #include <gmodule.h>
 
 #include "serial.h"
+#include "log.h"
+#include "gcode.h"
 
 typedef enum gui_status
 {
@@ -60,6 +62,9 @@ typedef struct gui_context
     
     serial_driver *
         serial;
+
+    gcode_params *
+        gcode;    
     
     gui_status status;
 } gui_context;

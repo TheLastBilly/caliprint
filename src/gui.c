@@ -75,6 +75,8 @@ gui_context * gui_create_context( const char * builder_file_path )
         builder_file_path
     );
 
+    context->gcode = gcode_create_params();
+
     context->status = GUI_OK;
 
     return context;
@@ -88,6 +90,16 @@ void gui_free_context( gui_context * context )
     if(context->builder_file_path != NULL)
     {
         free( context->builder_file_path );
+    }
+
+    if(context->serial != NULL)
+    {
+        serial_free_driver( context->serial );
+    }
+
+    if(context->gcode != NULL)
+    {
+        gcode_free_params( context->gcode );
     }
 
     free( context );
