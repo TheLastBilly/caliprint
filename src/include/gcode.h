@@ -6,6 +6,8 @@
 #include <string.h>
 #include <stdbool.h>
 
+#include "serial.h"
+
 #define GCODE_PARAMS_MAX_BUFFER 100
 
 typedef enum gcode_axis
@@ -15,6 +17,14 @@ typedef enum gcode_axis
     GCODE_Z = 0x04,
     GCODE_ALL = 0x00
 }gcode_axis;
+
+typedef enum gcode_status
+{
+    GCODE_NOT_READY = 0x01,
+    GCODE_RECEIVE_ERROR = 0x02,
+    GCODE_SERIAL_SEND_ERROR = 0x3,
+    GCODE_OK = 0x04,
+}gcode_status;
 
 typedef struct gcode_params
 {
@@ -26,7 +36,8 @@ typedef struct gcode_params
         seconds,
         retract;
     bool
-        is_linear;
+        is_linear,
+        is_ready;
     char buffer[GCODE_PARAMS_MAX_BUFFER];    
     gcode_axis active_axis;
 }gcode_params;
@@ -41,3 +52,5 @@ const char * gcode_move_x( gcode_params * params, float x );
 const char * gcode_move_y( gcode_params * params, float y );
 const char * gcode_move_z( gcode_params * params, float z );
 const char * gcode_move_to( gcode_params * params, float x, float y, float z );
+
+gcode_status gcode_send(  gcode_params * params, serial_driver * serial, const char * command );

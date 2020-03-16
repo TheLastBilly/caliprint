@@ -2,7 +2,9 @@
 
 gcode_params * gcode_create_params()
 {
-    return (gcode_params *) calloc( 1, sizeof(gcode_params) );
+    gcode_params * g = (gcode_params *) calloc( 1, sizeof(gcode_params) );
+    g->is_ready = true;
+    return g;
 }
 
 void gcode_set_linear( gcode_params * params, bool is_linear )
@@ -145,4 +147,23 @@ const char * gcode_move_z( gcode_params * params, float z )
     params->z = z;
     params->active_axis = GCODE_Z;
     return gcode_move(params);
+}
+
+gcode_status gcode_send( gcode_params * params, serial_driver * serial, const char * command )
+{
+    if(!params->is_ready)
+    {
+        if(serial_receive( serial ) != SERIAL_OK)
+            return GCODE_RECEIVE_ERROR;
+        
+        if( strcmp("OK", serial_get_buffer(serial, NULL)) == 0 )
+            params->is_ready = true;
+        else
+            return GCODE_NOT_READY;
+    }
+
+    if(serial_printf( serial, (char *) command ) != SERIAL_OK)
+        return GCODE_SERIAL_SEND_ERROR;
+    
+    return GCODE_OK;
 }

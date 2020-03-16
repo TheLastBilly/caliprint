@@ -21,14 +21,14 @@ extern int errno;
 
 typedef enum serial_status
 {
-    NO_SERIAL_ERROR,
-    SOCKET_OPEN_ERROR,
-    SOCKET_ATTR_GET_ERROR,
-    SOCKET_ATTR_SET_ERROR,
-    SEND_ERROR,
-    READ_ERROR,
-    NOT_CONNECTED,
-    SERIAL_OK,
+    NO_SERIAL_ERROR = 0x0b,
+    SERIAL_PORT_OPEN_ERROR = 0x0c,
+    SERIAL_PORT_ATTR_GET_ERROR = 0x0d,
+    SERIAL_PORT_ATTR_SET_ERROR = 0x0e,
+    SERIAL_SEND_ERROR = 0x0f,
+    SERIAL_READ_ERROR = 0x10,
+    NOT_CONNECTED = 0x11,
+    SERIAL_OK = 0x12,
 } serial_status;
 
 typedef struct serial_driver 

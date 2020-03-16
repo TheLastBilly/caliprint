@@ -48,16 +48,10 @@ gboolean on_control_connect_pressed_callback( GtkWidget *object, gpointer user_d
     context->serial = serial_create_driver( "/dev/ttyS10", SP115200, false );
     if( serial_get_status( context->serial ) != SERIAL_OK )
     {
-        log_printf( 
-            context->control_log, 
-            "Cannot connect to serial port %s\n", 
-            serial_get_port( context->serial )
+        gui_error_handle_and_set( 
+            context,
+            serial_get_status( context->serial )
         );
-        gtk_button_set_label(
-            context->control_connect,
-            "Connect"
-        );
-
         return true;
     }
     else
@@ -82,8 +76,14 @@ gboolean on_control_connect_pressed_callback( GtkWidget *object, gpointer user_d
 gboolean on_control_preferences_pressed_callback( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    gcode_params * params = gcode_create_params();
-    gcode_free_params( params );
+    return true;
+}
+
+// Home Buttons
+gboolean on_control_home_pressed_callback( GtkWidget *object, gpointer user_data )
+{
+    gui_context * context = (gui_context *)user_data;
+    log_printf(context->control_log, "%s\n", gcode_home( context->gcode, GCODE_ALL ));
     return true;
 }
 
@@ -91,20 +91,21 @@ gboolean on_control_preferences_pressed_callback( GtkWidget *object, gpointer us
 gboolean on_control_home_x_pressed_callback( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
+    log_printf(context->control_log, "%s\n", gcode_home( context->gcode, GCODE_X ));
     return true;
 }
 
 gboolean on_control_home_y_pressed_callback( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    log_printf(context->control_log, "Not implemented!\n");
+    log_printf(context->control_log, "%s\n", gcode_home( context->gcode, GCODE_Y ));
     return true;
 }
 
 gboolean on_control_home_z_pressed_callback( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    log_printf(context->control_log, "Not implemented!\n");
+    log_printf(context->control_log, "%s\n", gcode_home( context->gcode, GCODE_Z ));
     return true;
 }
 

@@ -14,14 +14,14 @@ serial_driver * serial_create_driver( const char * port, serial_speed speed, boo
     driver->socket = open( port, O_RDWR | O_NOCTTY | O_SYNC );
     if( driver->socket < 0 )
     {
-        driver->status = SOCKET_OPEN_ERROR;
+        driver->status = SERIAL_PORT_OPEN_ERROR;
         return driver;
     }
 
     struct termios tty;
     if( tcgetattr( driver->socket, &tty ) != 0 )
     {
-        driver->status = SOCKET_ATTR_GET_ERROR;
+        driver->status = SERIAL_PORT_ATTR_GET_ERROR;
         return driver;
     }
 
@@ -47,7 +47,7 @@ serial_driver * serial_create_driver( const char * port, serial_speed speed, boo
 
     if( tcsetattr( driver->socket, TCSANOW, &tty ) != 0 )
     {
-        driver->status = SOCKET_ATTR_SET_ERROR;
+        driver->status = SERIAL_PORT_ATTR_SET_ERROR;
         return driver;
     }
 
@@ -108,7 +108,7 @@ serial_status serial_send( serial_driver * driver, char * str, size_t size )
     
     if( write( driver->socket, str, size ) < 0 )
     {
-        return SEND_ERROR;
+        return SERIAL_SEND_ERROR;
     }
 
     return SERIAL_OK;
@@ -137,7 +137,7 @@ serial_status serial_recv( serial_driver * driver, char * str, size_t size )
                 driver->should_block
             )
             {
-                return READ_ERROR;
+                return SERIAL_READ_ERROR;
             }
 
             return SERIAL_OK;
@@ -165,7 +165,8 @@ const char * serial_get_buffer( serial_driver * driver, size_t * size )
 {
     if( driver == NULL )
         return NULL;
-    *size = driver->buffer_size; 
+    if(size != NULL)
+        *size = driver->buffer_size; 
     return (const char *) driver->buffer;
 }
 

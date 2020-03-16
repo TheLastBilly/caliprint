@@ -60,6 +60,20 @@ void gui_connect_signals( gui_context * context )
         context
     );
     
+    //Control Home Button
+    context->control_home = GTK_BUTTON(
+        gtk_builder_get_object(
+            context->builder,
+            "control_home"
+        )
+    );
+    g_signal_connect(
+        context->control_home,
+        "clicked",
+        G_CALLBACK(on_control_home_pressed_callback),
+        context
+    );
+    
     //Control Home X Button
     context->control_home_x = GTK_BUTTON(
         gtk_builder_get_object(

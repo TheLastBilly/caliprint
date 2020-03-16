@@ -15,16 +15,16 @@
 
 typedef enum gui_status
 {
-    GTK_NOT_INIT,
-    NO_FILE_ERROR,
-    FILE_ACCESS_ERROR,
-    GUI_OK,
+    GTK_NOT_INIT = 0x05,
+    GTK_NO_FILE_ERROR = 0x06,
+    GTK_FILE_ACCESS_ERROR = 0x07,
+    GUI_OK = 0x08,
 } gui_status;
 
 typedef enum gui_error_type
 {
-    TRIVIAL_ERROR,
-    GTK_ERROR,
+    GTK_TRIVIAL_ERROR = 0x09,
+    GTK_ERROR = 0x0a,
 }gui_error_type;
 
 typedef struct gui_context
@@ -41,6 +41,7 @@ typedef struct gui_context
     GtkButton
         * control_preferences,
         * control_connect,
+        * control_home,
         * control_home_x,
         * control_home_y,
         * control_home_z,
@@ -78,15 +79,15 @@ gui_context * gui_create_context( const char * builder_file_path );
 void gui_free_context( gui_context * context );
 
 gui_status gui_get_status( gui_context * context );
-const char * gui_get_status_description( gui_status status );
-const char * gui_get_internal_status_description( gui_context * context );
 
 void gui_connect_signals( gui_context * context );
 
-bool gui_has_errors( gui_context * context );
-
 void gui_set_status(gui_context * context, gui_status status );
-gui_status gui_error_handler( gui_context * context, gui_error_type type );
+
+void gui_error_print_all( gui_context * context, const char * format, ... );
+void gui_error_terminate( gui_context * context );
+void gui_error_handle( gui_context * context );
+void gui_error_handle_and_set( gui_context * context, int status );
 
 // ###################################
 // ############ Callbacks ############
@@ -96,6 +97,7 @@ gui_status gui_error_handler( gui_context * context, gui_error_type type );
 gboolean on_main_window_destroy_callback( GtkWidget *object, gpointer user_data );
 
 //Home Buttons
+gboolean on_control_home_pressed_callback( GtkWidget *object, gpointer user_data );
 gboolean on_control_home_x_pressed_callback( GtkWidget *object, gpointer user_data );
 gboolean on_control_home_y_pressed_callback( GtkWidget *object, gpointer user_data );
 gboolean on_control_home_z_pressed_callback( GtkWidget *object, gpointer user_data );
