@@ -72,10 +72,47 @@ gboolean on_control_connect_pressed_callback( GtkWidget *object, gpointer user_d
     return true;
 }
 
-//Preferences Button
+//Preferences Widgets
 gboolean on_control_preferences_pressed_callback( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
+    gtk_window_present( context->preferences_window );
+    return true;
+}
+gboolean on_preferences_save_pressed_callback( GtkWidget *object, gpointer user_data )
+{
+    gui_context * context = (gui_context *)user_data;
+    log_printf( context->control_log, "Not implemented\n" );
+    return true;
+}
+gboolean on_preferences_serial_port_edited( GtkWidget *object, gpointer user_data )
+{
+    gui_context * context = (gui_context *)user_data;
+    log_printf( context->control_log, "Not implemented\n" );
+    return true;
+}
+gboolean on_preferences_serial_baudrate_edited( GtkWidget *object, gpointer user_data )
+{
+    gui_context * context = (gui_context *)user_data;
+    log_printf( context->control_log, "Not implemented\n" );
+    return true;
+}
+gboolean on_preferences_printer_height_edited( GtkWidget *object, gpointer user_data )
+{
+    gui_context * context = (gui_context *)user_data;
+    log_printf( context->control_log, "Not implemented\n" );
+    return true;
+}
+gboolean on_preferences_printer_width_edited( GtkWidget *object, gpointer user_data )
+{
+    gui_context * context = (gui_context *)user_data;
+    log_printf( context->control_log, "Not implemented\n" );
+    return true;
+}
+gboolean on_preferences_printer_length_edited( GtkWidget *object, gpointer user_data )
+{
+    gui_context * context = (gui_context *)user_data;
+    log_printf( context->control_log, "Not implemented\n" );
     return true;
 }
 
@@ -109,7 +146,13 @@ gboolean on_control_home_z_pressed_callback( GtkWidget *object, gpointer user_da
     return true;
 }
 
-//Z's Buttons
+//Z's Widgets
+gboolean on_control_z_level_edited( GtkWidget *object, gpointer user_data )
+{
+    gui_context * context = (gui_context *)user_data;
+    log_printf( context->control_log, "Not implemented\n" );
+    return true;
+}
 gboolean on_control_raise_z_pressed_callback( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;

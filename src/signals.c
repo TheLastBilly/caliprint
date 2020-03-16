@@ -28,6 +28,21 @@ void gui_connect_signals( gui_context * context )
         context
     );
 
+    //Get Preferences Window from builder
+    context->preferences_window = GTK_WINDOW(
+        gtk_builder_get_object( 
+            context->builder, 
+            "preferences_window"
+        )
+    );
+    //Connect hide signal for window
+    g_signal_connect(
+        context->preferences_window,
+        "delete-event",
+        G_CALLBACK(gtk_widget_hide_on_delete),
+        context->preferences_window
+    );
+
     // #######
     // Buttons
     // #######
@@ -144,6 +159,20 @@ void gui_connect_signals( gui_context * context )
         context
     );
 
+    //Lower Z Button
+    context->preferences_save = GTK_BUTTON(
+        gtk_builder_get_object(
+            context->builder,
+            "preferences_save"
+        )
+    );
+    g_signal_connect(
+        context->preferences_save,
+        "clicked",
+        G_CALLBACK(on_preferences_save_pressed_callback),
+        context
+    );
+
     // #########
     // TextViews
     // #########
@@ -154,5 +183,93 @@ void gui_connect_signals( gui_context * context )
             context->builder,
             "control_log"
         )
+    );
+
+    // #######
+    // Entries
+    // #######
+
+    //Z's level
+    context->control_z_level = GTK_ENTRY(
+        gtk_builder_get_object(
+            context->builder,
+            "control_z_level"
+        )
+    );
+    g_signal_connect(
+        context->control_z_level,
+        "activate",
+        G_CALLBACK(on_control_z_level_edited),
+        context
+    );
+
+    //Serial Port
+    context->preferences_serial_port = GTK_ENTRY(
+        gtk_builder_get_object(
+            context->builder,
+            "preferences_serial_port"
+        )
+    );
+    g_signal_connect(
+        context->preferences_serial_port,
+        "activate",
+        G_CALLBACK(on_preferences_serial_port_edited),
+        context
+    );
+
+    //Serial BaudRate
+    context->preferences_serial_baudrate = GTK_ENTRY(
+        gtk_builder_get_object(
+            context->builder,
+            "preferences_serial_baudrate"
+        )
+    );
+    g_signal_connect(
+        context->preferences_serial_baudrate,
+        "activate",
+        G_CALLBACK(on_preferences_serial_baudrate_edited),
+        context
+    );
+
+    //Printer Height
+    context->preferences_printer_height = GTK_ENTRY(
+        gtk_builder_get_object(
+            context->builder,
+            "preferences_printer_height"
+        )
+    );
+    g_signal_connect(
+        context->preferences_printer_height,
+        "activate",
+        G_CALLBACK(on_preferences_printer_height_edited),
+        context
+    );
+
+    //Printer Width
+    context->preferences_printer_width = GTK_ENTRY(
+        gtk_builder_get_object(
+            context->builder,
+            "preferences_printer_width"
+        )
+    );
+    g_signal_connect(
+        context->preferences_printer_width,
+        "activate",
+        G_CALLBACK(on_preferences_printer_width_edited),
+        context
+    );
+
+    //Printer Length
+    context->preferences_printer_length = GTK_ENTRY(
+        gtk_builder_get_object(
+            context->builder,
+            "preferences_printer_length"
+        )
+    );
+    g_signal_connect(
+        context->preferences_printer_length,
+        "activate",
+        G_CALLBACK(on_preferences_printer_length_edited),
+        context
     );
 }

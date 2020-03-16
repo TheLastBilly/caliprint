@@ -27,7 +27,9 @@ gui_status gui_init( gui_context * context, int * argc, const char *** argv )
         GTK_WIDGET(
             context->main_window
         )
-    );    
+    );
+
+    g_object_unref( context->builder );
 
     gtk_main();
 
@@ -36,6 +38,7 @@ gui_status gui_init( gui_context * context, int * argc, const char *** argv )
 
 void gui_end()
 {
+
     if( gtk_is_init )
     {
         gtk_main_quit();
@@ -100,6 +103,12 @@ void gui_free_context( gui_context * context )
         gcode_free_params( context->gcode );
     }
 
+    if( context->main_window != NULL )
+        g_object_unref( context->main_window );
+
+    if( context->preferences_window != NULL )
+        g_object_unref( context->preferences_window );
+        
     free( context );
 }
 
