@@ -9,3 +9,5 @@
 char * get_time( char * str );
 
 char * check_for_files( char * file_list[], size_t list_size );
+
+bool check_for_file_access( const char * file );

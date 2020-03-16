@@ -16,3 +16,8 @@ char * get_time( char * str )
     
     return str + 11;
 }
+
+bool check_for_file_access( const char * file )
+{
+    return access( file, F_OK ) == 1 ? false : true;
+}
