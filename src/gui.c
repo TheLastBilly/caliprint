@@ -2,6 +2,20 @@
 
 bool gtk_is_init = false;
 
+static const char * glade_file_paths[] =
+{
+    "./caliprint.glade",
+    "../caliprint.glade",
+    "/usr/share/caliprint/caliprint.glade",
+};
+
+static const char * config_file_paths[] = 
+{
+    "./caliprint.conf",
+    "../caliprint.conf",
+    "~/.caliprint.conf",
+};
+
 gui_status gui_init( gui_context * context, int * argc, const char *** argv )
 {
     //Check for any errors

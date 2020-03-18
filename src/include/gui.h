@@ -12,6 +12,7 @@
 #include "serial.h"
 #include "log.h"
 #include "gcode.h"
+#include "preferences.h"
 
 typedef enum gui_status
 {
@@ -72,7 +73,10 @@ typedef struct gui_context
         serial;
 
     gcode_params *
-        gcode;    
+        gcode;
+
+    preferences_object *
+        preferences;
     
     gui_status status;
 } gui_context;
