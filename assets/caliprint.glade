@@ -208,6 +208,7 @@
                   <object class="GtkEntry" id="control_z_level">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="input_purpose">number</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -312,6 +313,7 @@
                 <property name="margin_right">10</property>
                 <property name="margin_bottom">10</property>
                 <property name="placeholder_text" translatable="yes">Baud Rate</property>
+                <property name="input_purpose">number</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -352,6 +354,7 @@
                 <property name="margin_right">10</property>
                 <property name="margin_bottom">10</property>
                 <property name="placeholder_text" translatable="yes">Printer Height</property>
+                <property name="input_purpose">number</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -367,6 +370,7 @@
                 <property name="margin_right">10</property>
                 <property name="margin_bottom">10</property>
                 <property name="placeholder_text" translatable="yes">Printer Width</property>
+                <property name="input_purpose">number</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -382,6 +386,7 @@
                 <property name="margin_right">10</property>
                 <property name="margin_bottom">10</property>
                 <property name="placeholder_text" translatable="yes">Printer Length</property>
+                <property name="input_purpose">number</property>
               </object>
               <packing>
                 <property name="expand">False</property>

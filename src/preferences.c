@@ -122,10 +122,13 @@ static void parse_line( preferences_object * preferences, const char * line )
     strncpy(command, line, command_len);
     strncpy(data, assign_char+1, data_len);
     data[data_len-1] = command[command_len] ='\0';
+    float f_buffer = 0.0;
 
     if(strcmp(command, "z_level") == 0)
     {
-        preferences->z_level = (atof(data));
+        f_buffer = (atof(data));
+        f_buffer = f_buffer < 0.0 ? f_buffer * -1 : f_buffer;
+        preferences->z_level = f_buffer;
         return;
     }
     else if(strcmp(command, "serial_port") == 0)
@@ -149,17 +152,23 @@ static void parse_line( preferences_object * preferences, const char * line )
     }
     else if(strcmp(command, "printer_height") == 0)
     {
-        preferences->printer_height = (atof(data));
+        f_buffer = (atof(data));
+        f_buffer = f_buffer < 0.0 ? f_buffer * -1 : f_buffer;
+        preferences->printer_height = f_buffer;
         return;
     }
     else if(strcmp(command, "printer_width") == 0)
     {
-        preferences->printer_width = (atof(data));
+        f_buffer = (atof(data));
+        f_buffer = f_buffer < 0.0 ? f_buffer * -1 : f_buffer;
+        preferences->printer_width = f_buffer;
         return;
     }
     else if(strcmp(command, "printer_lenght") == 0)
     {
-        preferences->printer_lenght = (atof(data));
+        f_buffer = (atof(data));
+        f_buffer = f_buffer < 0.0 ? f_buffer * -1 : f_buffer;
+        preferences->printer_lenght = f_buffer;
         return;
     }
 }

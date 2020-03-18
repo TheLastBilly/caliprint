@@ -1,10 +1,26 @@
 #include "include/gcode.h"
 
-gcode_params * gcode_create_params()
+gcode_params * gcode_create_empty( )
 {
     gcode_params * g = (gcode_params *) calloc( 1, sizeof(gcode_params) );
     g->is_ready = true;
     return g;
+}
+
+gcode_params * gcode_create( float max_x, float max_y, float max_z )
+{
+    gcode_params * params = gcode_create_empty();
+    if(max_x < 0.0)
+        max_x *= -1;
+    if(max_y < 0.0)
+        max_y *= -1;
+    if(max_z < 0.0)
+        max_z *= -1;
+    params->max_x = max_x;
+    params->max_y = max_y;
+    params->max_z = max_z;
+    params->is_ready = true;
+    return params;
 }
 
 void gcode_set_linear( gcode_params * params, bool is_linear )
@@ -34,17 +50,20 @@ const char * gcode_home( gcode_params * params, gcode_axis axis )
     {
         a[a_i] = 'X';
         a_i += 2;
+        params->x = 0.0;
     }
 
     if((axis & GCODE_Y) == GCODE_Y)
     {
         a[a_i] = 'Y';
         a_i += 2;
+        params->y = 0.0;
     }
 
     if((axis & GCODE_Z) == GCODE_Z)
     {
         a[a_i] = 'Z';
+        params->z = 0.0;
     }
 
     if(axis == GCODE_ALL)
@@ -77,6 +96,10 @@ const char * gcode_move( gcode_params * params )
 
     if(for_all || (params->active_axis & GCODE_X) == GCODE_X)
     {
+        if(params->x > params->max_x)
+            params->x = params->max_x;
+        else if(params->x < 0.0)
+            params->x = 0.0;
         index +=
             snprintf(
                 &params->buffer[index],
@@ -87,6 +110,10 @@ const char * gcode_move( gcode_params * params )
     }
     if(for_all || (params->active_axis & GCODE_Y) == GCODE_Y)
     {
+        if(params->y > params->max_y)
+            params->y = params->max_y;
+        else if(params->y < 0.0)
+            params->y = 0.0;
         index +=
             snprintf(
                 &params->buffer[index],
@@ -97,6 +124,10 @@ const char * gcode_move( gcode_params * params )
     }
     if(for_all || (params->active_axis & GCODE_Z) == GCODE_Z)
     {
+        if(params->z > params->max_z)
+            params->z = params->max_z;
+        else if(params->z < 0.0)
+            params->z = 0.0;
         index +=
             snprintf(
                 &params->buffer[index],
@@ -146,6 +177,31 @@ const char * gcode_move_z( gcode_params * params, float z )
         return NULL;
     params->z = z;
     params->active_axis = GCODE_Z;
+    return gcode_move(params);
+}
+const char * gcode_translate( gcode_params * params, gcode_axis axis, float var )
+{
+
+    if(axis == GCODE_ALL)
+    {
+        axis = GCODE_X | GCODE_Y | GCODE_Z;
+    }
+
+    if((axis & GCODE_X) == GCODE_X)
+    {
+        params->x += var;
+    }
+
+    if((axis & GCODE_Y) == GCODE_Y)
+    {
+        params->y += var;
+    }
+
+    if((axis & GCODE_Z) == GCODE_Z)
+    {
+        params->z += var;
+    }
+
     return gcode_move(params);
 }
 

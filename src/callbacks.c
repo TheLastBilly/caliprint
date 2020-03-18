@@ -1,11 +1,17 @@
 #include "include/gui.h"
-/*
-Callback template (might vary depending on the widget):
-gboolean function( GtkWidget *object, gpointer user_data )
+
+static void update_entry_float( GtkEntry * entry, float f )
 {
-    return true;
+    char buffer[20] = {0};
+    snprintf( buffer, 19, "%f", f );
+    gtk_entry_set_text( entry, buffer );
 }
-*/
+static void update_entry_int( GtkEntry * entry, int i )
+{
+    char buffer[10] = {0};
+    snprintf( buffer, 9, "%d", i );
+    gtk_entry_set_text( entry, buffer );
+}
 
 //Main Window
 gboolean on_main_window_destroy_callback( GtkWidget *object, gpointer user_data )
@@ -99,37 +105,65 @@ gboolean on_preferences_serial_port_edited( GtkWidget *object, gpointer user_dat
 gboolean on_preferences_serial_baudrate_edited( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
+    //This is stupid, I know, but it works well enough for now
     context->preferences->serial_baudrate = 
         int_to_baudrate(atoi(
             gtk_entry_get_text(context->preferences_serial_baudrate)
         ));
+    update_entry_int(
+        context->preferences_serial_baudrate,
+        baudrate_to_int(
+            context->preferences->serial_baudrate
+        )
+    );
     return true;
 }
 gboolean on_preferences_printer_height_edited( GtkWidget *object, gpointer user_data )
 {
-    gui_context * context = (gui_context *)user_data;
-    context->preferences->printer_height = 
+    gui_context * context = (gui_context *)user_data; 
+    double f_buffer = 
         atof(
             gtk_entry_get_text(context->preferences_printer_height)
         );
+    if(f_buffer < 0.0)
+        f_buffer *= -1;
+    context->preferences->printer_height = f_buffer;
+    update_entry_float(
+        context->preferences_printer_height,
+        f_buffer
+    );
     return true;
 }
 gboolean on_preferences_printer_width_edited( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    context->preferences->printer_width = 
+    double f_buffer = 
         atof(
             gtk_entry_get_text(context->preferences_printer_width)
         );
+    if(f_buffer < 0.0)
+        f_buffer *= -1;
+    context->preferences->printer_width = f_buffer;
+    update_entry_float(
+        context->preferences_printer_width,
+        f_buffer
+    );
     return true;
 }
 gboolean on_preferences_printer_length_edited( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    context->preferences->printer_lenght = 
+    double f_buffer = 
         atof(
             gtk_entry_get_text(context->preferences_printer_length)
         );
+    if(f_buffer < 0.0)
+        f_buffer *= -1;
+    context->preferences->printer_lenght = f_buffer;
+    update_entry_float(
+        context->preferences_printer_length,
+        f_buffer
+    );
     return true;
 }
 
@@ -137,25 +171,33 @@ gboolean on_preferences_printer_length_edited( GtkWidget *object, gpointer user_
 gboolean on_control_home_pressed_callback( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    serial_printf(context->serial, "%s", gcode_home( context->gcode, GCODE_ALL ));
+    int err = serial_printf(context->serial, "%s", gcode_home( context->gcode, GCODE_ALL ));
+    if(err != SERIAL_OK)
+        gui_error_handle_and_set(context, err);
     return true;
 }
 gboolean on_control_home_x_pressed_callback( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    serial_printf(context->serial, "%s", gcode_home( context->gcode, GCODE_X ));
+    int err = serial_printf(context->serial, "%s", gcode_home( context->gcode, GCODE_X ));
+    if(err != SERIAL_OK)
+        gui_error_handle_and_set(context, err);
     return true;
 }
 gboolean on_control_home_y_pressed_callback( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    serial_printf(context->serial, "%s", gcode_home( context->gcode, GCODE_Y ));
+    int err = serial_printf(context->serial, "%s", gcode_home( context->gcode, GCODE_Y ));
+    if(err != SERIAL_OK)
+        gui_error_handle_and_set(context, err);
     return true;
 }
 gboolean on_control_home_z_pressed_callback( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    serial_printf(context->serial, "%s", gcode_home( context->gcode, GCODE_Z ));
+    int err = serial_printf(context->serial, "%s", gcode_home( context->gcode, GCODE_Z ));
+    if(err != SERIAL_OK)
+        gui_error_handle_and_set(context, err);
     return true;
 }
 
@@ -163,21 +205,28 @@ gboolean on_control_home_z_pressed_callback( GtkWidget *object, gpointer user_da
 gboolean on_control_z_level_edited( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    context->preferences->z_level = 
+    double f_buffer = 
         atof(
             gtk_entry_get_text(context->control_z_level)
         );
+    if(f_buffer < 0.0)
+        f_buffer *= -1;
+    context->preferences->z_level = f_buffer;
     return true;
 }
 gboolean on_control_raise_z_pressed_callback( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    log_printf(context->control_log, "Not implemented!\n");
+    int err = serial_printf(context->serial, "%s", gcode_translate( context->gcode, GCODE_Z, context->preferences->z_level ));
+    if(err != SERIAL_OK)
+        gui_error_handle_and_set(context, err);
     return true;
 }
 gboolean on_control_lower_z_pressed_callback( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    log_printf(context->control_log, "Not implemented!\n");
+    int err = serial_printf(context->serial, "%s", gcode_translate( context->gcode, GCODE_Z, context->preferences->z_level * -1 ));
+    if(err != SERIAL_OK)
+        gui_error_handle_and_set(context, err);
     return true;
 }

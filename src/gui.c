@@ -108,7 +108,11 @@ gui_context * gui_create_context(  )
     else
         context->preferences = preferences_create_from_file( preferences_file_path );
  
-    context->gcode = gcode_create_params();
+    context->gcode = gcode_create(
+        context->preferences->printer_lenght,
+        context->preferences->printer_width,
+        context->preferences->printer_height
+    );
 
     context->status = GUI_OK;
 
