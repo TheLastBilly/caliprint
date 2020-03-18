@@ -3,9 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-
-#include <termios.h>
 
 #include "utils.h"
 
@@ -29,7 +26,8 @@ typedef struct preferences_object
     float
         printer_height,
         printer_width,
-        printer_lenght;
+        printer_lenght,
+        z_level;
 
     bool is_initialized;
 

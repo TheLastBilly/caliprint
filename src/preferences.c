@@ -2,7 +2,6 @@
 
 static void parse_file( preferences_object * preferences, FILE * fp );
 static void parse_line( preferences_object * preferences, const char * line );
-static int int_to_baudrate( int baudrate );
 
 preferences_object * preferences_create_from_file( const char * file_path )
 {
@@ -12,6 +11,13 @@ preferences_object * preferences_create_from_file( const char * file_path )
         preferences->status = NO_PREFERENCES_FILE_ERROR;
         return preferences;
     }
+
+    //Load defaults
+    preferences->serial_port = allocate_string("/dev/ttyUSB0");
+    preferences->serial_baudrate = B115200;
+    preferences->printer_height = 180.0;
+    preferences->printer_width = 180.0;
+    preferences->printer_lenght = 180.0;
 
     FILE * file = fopen( file_path, "r" );
     parse_file( preferences, file );
@@ -23,14 +29,6 @@ preferences_object * preferences_create_from_file( const char * file_path )
     preferences->status = PREFERENCES_OK;
 
     preferences->is_initialized = true;
-
-    //Load defaults
-    preferences->serial_port = allocate_string("/dev/ttyUSB0");
-    preferences->serial_baudrate = B115200;
-    preferences->printer_height = 180.0;
-    preferences->printer_width = 180.0;
-    preferences->printer_lenght = 180.0;
-
     return preferences;
 }
 void preferences_free_object( preferences_object * preferences )
@@ -64,11 +62,13 @@ preferences_status preferences_save( preferences_object * preferences )
 
     fprintf(
         file,
-        "%s=%s;\n%s=%d;\n%s=%f;\n%s=%f;\n%s=%f;",
+        "%s=%f;\n%s=%s;\n%s=%d;\n%s=%f;\n%s=%f;\n%s=%f;",
+        "z_level",
+        preferences->z_level,
         "serial_port",
         preferences->serial_port,
         "serial_baudrate",
-        preferences->serial_baudrate,
+        baudrate_to_int(preferences->serial_baudrate),
         "printer_height",
         preferences->printer_height,
         "printer_width",
@@ -123,7 +123,12 @@ static void parse_line( preferences_object * preferences, const char * line )
     strncpy(data, assign_char+1, data_len);
     data[data_len-1] = command[command_len] ='\0';
 
-    if(strcmp(command, "serial_port") == 0)
+    if(strcmp(command, "z_level") == 0)
+    {
+        preferences->z_level = (atof(data));
+        return;
+    }
+    else if(strcmp(command, "serial_port") == 0)
     {   
         if(preferences->serial_port != NULL)
             free(preferences->serial_port);
@@ -156,27 +161,5 @@ static void parse_line( preferences_object * preferences, const char * line )
     {
         preferences->printer_lenght = (atof(data));
         return;
-    }
-}
-
-static int int_to_baudrate( int baudrate )
-{
-    switch (baudrate)
-    {
-    case 9600:
-        return 9600;
-        break;
-    case 19200:
-        return B19200;
-        break;
-    case 57600:
-        return B57600;
-        break;
-    case 115200:
-        return B115200;
-        break;
-    default:
-        return B115200;
-        break;
     }
 }

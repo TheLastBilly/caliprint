@@ -48,8 +48,7 @@ typedef struct gui_context
         * control_home_y,
         * control_home_z,
         * control_raise_z,
-        * control_lower_z,
-        * preferences_save;
+        * control_lower_z;
     
     GtkEntry
         * control_z_level,
@@ -84,7 +83,7 @@ typedef struct gui_context
 extern bool gtk_is_init;
 
 gui_status gui_init( gui_context * context, int * argc, const char *** argv );
-void gui_end();
+void gui_end( gui_context * context );
 
 gui_context * gui_create_context( );
 void gui_free_context( gui_context * context );
@@ -99,6 +98,8 @@ void gui_error_print_all( gui_context * context, const char * format, ... );
 void gui_error_terminate( gui_context * context );
 void gui_error_handle( gui_context * context );
 void gui_error_handle_and_set( gui_context * context, int status );
+
+void gui_apply_preferences( gui_context * context );
 
 // ###################################
 // ############ Callbacks ############
@@ -123,7 +124,6 @@ gboolean on_control_connect_pressed_callback( GtkWidget *object, gpointer user_d
 
 //Preference Widgets
 gboolean on_control_preferences_pressed_callback( GtkWidget *object, gpointer user_data );
-gboolean on_preferences_save_pressed_callback( GtkWidget *object, gpointer user_data );
 gboolean on_preferences_serial_port_edited( GtkWidget *object, gpointer user_data );
 gboolean on_preferences_serial_baudrate_edited( GtkWidget *object, gpointer user_data );
 gboolean on_preferences_printer_height_edited( GtkWidget *object, gpointer user_data );

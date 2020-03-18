@@ -159,20 +159,6 @@ void gui_connect_signals( gui_context * context )
         context
     );
 
-    //Lower Z Button
-    context->preferences_save = GTK_BUTTON(
-        gtk_builder_get_object(
-            context->builder,
-            "preferences_save"
-        )
-    );
-    g_signal_connect(
-        context->preferences_save,
-        "clicked",
-        G_CALLBACK(on_preferences_save_pressed_callback),
-        context
-    );
-
     // #########
     // TextViews
     // #########

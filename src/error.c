@@ -107,6 +107,7 @@ void gui_error_handle( gui_context * context )
         break;
     case PREFERENCES_OK:
         snprintf( buffer, 99, "Preferences OK.\n" );
+        should_log = false;
         break;
     default:
         snprintf( buffer, 99, "Unknown error.\n" );

@@ -10,7 +10,10 @@ gboolean function( GtkWidget *object, gpointer user_data )
 //Main Window
 gboolean on_main_window_destroy_callback( GtkWidget *object, gpointer user_data )
 {
-    gui_end();
+    gui_context * context = (gui_context *)user_data;
+    preferences_save(context->preferences);
+    gui_error_handle_and_set( context, preferences_get_status(context->preferences) );
+    gui_end( context );
     return true;
 }
 
@@ -79,40 +82,49 @@ gboolean on_control_preferences_pressed_callback( GtkWidget *object, gpointer us
     gtk_window_present( context->preferences_window );
     return true;
 }
-gboolean on_preferences_save_pressed_callback( GtkWidget *object, gpointer user_data )
-{
-    gui_context * context = (gui_context *)user_data;
-    log_printf( context->control_log, "Not implemented\n" );
-    return true;
-}
 gboolean on_preferences_serial_port_edited( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    log_printf( context->control_log, "Not implemented\n" );
+    preferences_change_serial_port(
+        context->preferences,
+        (char *)gtk_entry_get_text(context->preferences_serial_port)
+    );
     return true;
 }
 gboolean on_preferences_serial_baudrate_edited( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    log_printf( context->control_log, "Not implemented\n" );
+    context->preferences->serial_baudrate = 
+        int_to_baudrate(atoi(
+            gtk_entry_get_text(context->preferences_serial_baudrate)
+        ));
     return true;
 }
 gboolean on_preferences_printer_height_edited( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    log_printf( context->control_log, "Not implemented\n" );
+    context->preferences->printer_height = 
+        atof(
+            gtk_entry_get_text(context->preferences_printer_height)
+        );
     return true;
 }
 gboolean on_preferences_printer_width_edited( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    log_printf( context->control_log, "Not implemented\n" );
+    context->preferences->printer_width = 
+        atof(
+            gtk_entry_get_text(context->preferences_printer_width)
+        );
     return true;
 }
 gboolean on_preferences_printer_length_edited( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    log_printf( context->control_log, "Not implemented\n" );
+    context->preferences->printer_lenght = 
+        atof(
+            gtk_entry_get_text(context->preferences_printer_length)
+        );
     return true;
 }
 
@@ -150,7 +162,10 @@ gboolean on_control_home_z_pressed_callback( GtkWidget *object, gpointer user_da
 gboolean on_control_z_level_edited( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    log_printf( context->control_log, "Not implemented\n" );
+    context->preferences->z_level = 
+        atof(
+            gtk_entry_get_text(context->control_z_level)
+        );
     return true;
 }
 gboolean on_control_raise_z_pressed_callback( GtkWidget *object, gpointer user_data )

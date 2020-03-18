@@ -13,7 +13,7 @@ static char * preferences_file_paths[] =
 {
     "./caliprint.conf",
     "../assets/caliprint.conf",
-    "~/.caliprint.conf",
+    "/etc/caliprint.conf",
 };
 
 gui_status gui_init( gui_context * context, int * argc, const char *** argv )
@@ -45,19 +45,21 @@ gui_status gui_init( gui_context * context, int * argc, const char *** argv )
 
     g_object_unref( context->builder );
 
+    gui_apply_preferences( context );
+
     gtk_main();
 
     return GUI_OK;
 }
 
-void gui_end()
-{
-
+void gui_end( gui_context * context )
+{   
     if( gtk_is_init )
     {
         gtk_main_quit();
         gtk_is_init = false;
     }
+    gui_free_context(context);
 }
 
 gui_context * gui_create_context(  )
@@ -137,12 +139,6 @@ void gui_free_context( gui_context * context )
     {
         preferences_free_object( context->preferences );
     }
-
-    if( context->main_window != NULL )
-        g_object_unref( context->main_window );
-
-    if( context->preferences_window != NULL )
-        g_object_unref( context->preferences_window );
         
     free( context );
 }
@@ -155,4 +151,25 @@ void gui_set_status( gui_context * context, gui_status status )
 gui_status gui_get_status( gui_context * context )
 {
     return context->status;
+}
+
+void gui_apply_preferences( gui_context * context )
+{
+    char buffer[100] = {0};
+    snprintf( buffer, 99, "%f", context->preferences->z_level );
+    gtk_entry_set_text( context->control_z_level, buffer );
+    
+    gtk_entry_set_text( context->preferences_serial_port, context->preferences->serial_port );
+    
+    snprintf( buffer, 99, "%d", baudrate_to_int(context->preferences->serial_baudrate) );
+    gtk_entry_set_text( context->preferences_serial_baudrate, buffer );
+    
+    snprintf( buffer, 99, "%f", context->preferences->printer_height );
+    gtk_entry_set_text( context->preferences_printer_height, buffer );
+    
+    snprintf( buffer, 99, "%f", context->preferences->printer_width );
+    gtk_entry_set_text( context->preferences_printer_width, buffer );
+    
+    snprintf( buffer, 99, "%f", context->preferences->printer_lenght );
+    gtk_entry_set_text( context->preferences_printer_length, buffer );
 }
