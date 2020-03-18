@@ -48,7 +48,12 @@ gboolean on_control_connect_pressed_callback( GtkWidget *object, gpointer user_d
         serial_free_driver( context->serial );
     }
     
-    context->serial = serial_create_driver( "/dev/ttyS10", SP115200, false );
+    context->serial = serial_create_driver( 
+        context->preferences->serial_port, 
+        context->preferences->serial_baudrate, 
+        false 
+    );
+    
     if( serial_get_status( context->serial ) != SERIAL_OK )
     {
         gui_error_handle_and_set( 
@@ -132,29 +137,25 @@ gboolean on_preferences_printer_length_edited( GtkWidget *object, gpointer user_
 gboolean on_control_home_pressed_callback( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    log_printf(context->control_log, "%s\n", gcode_home( context->gcode, GCODE_ALL ));
+    serial_printf(context->serial, "%s", gcode_home( context->gcode, GCODE_ALL ));
     return true;
 }
-
-// Home Buttons
 gboolean on_control_home_x_pressed_callback( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    log_printf(context->control_log, "%s\n", gcode_home( context->gcode, GCODE_X ));
+    serial_printf(context->serial, "%s", gcode_home( context->gcode, GCODE_X ));
     return true;
 }
-
 gboolean on_control_home_y_pressed_callback( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    log_printf(context->control_log, "%s\n", gcode_home( context->gcode, GCODE_Y ));
+    serial_printf(context->serial, "%s", gcode_home( context->gcode, GCODE_Y ));
     return true;
 }
-
 gboolean on_control_home_z_pressed_callback( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    log_printf(context->control_log, "%s\n", gcode_home( context->gcode, GCODE_Z ));
+    serial_printf(context->serial, "%s", gcode_home( context->gcode, GCODE_Z ));
     return true;
 }
 
