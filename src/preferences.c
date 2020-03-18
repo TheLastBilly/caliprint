@@ -3,7 +3,6 @@
 static void parse_file( preferences_object * preferences, FILE * fp );
 static void parse_line( preferences_object * preferences, const char * line );
 static int int_to_baudrate( int baudrate );
-static inline bool preferences_ok( preferences_object * preferences );
 
 preferences_object * preferences_create_from_file( const char * file_path )
 {
@@ -11,11 +10,6 @@ preferences_object * preferences_create_from_file( const char * file_path )
     if(file_path == NULL)
     {
         preferences->status = NO_PREFERENCES_FILE_ERROR;
-        return preferences;
-    }
-    if(check_for_file_access( file_path ))
-    {
-        preferences->status = PREFERENCES_FILE_ACCESS_ERROR;
         return preferences;
     }
 
@@ -29,6 +23,13 @@ preferences_object * preferences_create_from_file( const char * file_path )
     preferences->status = PREFERENCES_OK;
 
     preferences->is_initialized = true;
+
+    //Load defaults
+    preferences->serial_port = allocate_string("/dev/ttyUSB0");
+    preferences->serial_baudrate = B115200;
+    preferences->printer_height = 180.0;
+    preferences->printer_width = 180.0;
+    preferences->printer_lenght = 180.0;
 
     return preferences;
 }
@@ -45,7 +46,7 @@ void preferences_free_object( preferences_object * preferences )
 
 void preferences_change_serial_port( preferences_object * preferences, char * serial_port )
 {
-    if(!preferences_ok(preferences))
+    if(!preferences->is_initialized)
         return;
     if(preferences->serial_port != NULL)
         free(preferences->serial_port);
@@ -53,10 +54,9 @@ void preferences_change_serial_port( preferences_object * preferences, char * se
 }
 
 preferences_status preferences_save( preferences_object * preferences )
-{
-    if(!preferences_ok(preferences))
-        return (preferences->status = PREFERENCES_NOT_INIT_ERROR);
-    
+{   
+    if(preferences->status != PREFERENCES_OK)
+        return preferences->status;
     if(!check_for_file_access(preferences->file_path))
         return (preferences->status = PREFERENCES_FILE_ACCESS_ERROR);
     
@@ -64,7 +64,7 @@ preferences_status preferences_save( preferences_object * preferences )
 
     fprintf(
         file,
-        "%s=%s;\n%s=%d;\n%s=%f;%s=%f;\n%s=%f;",
+        "%s=%s;\n%s=%d;\n%s=%f;\n%s=%f;\n%s=%f;",
         "serial_port",
         preferences->serial_port,
         "serial_baudrate",
@@ -125,6 +125,8 @@ static void parse_line( preferences_object * preferences, const char * line )
 
     if(strcmp(command, "serial_port") == 0)
     {   
+        if(preferences->serial_port != NULL)
+            free(preferences->serial_port);
         preferences->serial_port = 
             calloc( 1, sizeof(char) * strlen(data) );
         sprintf(
@@ -177,9 +179,4 @@ static int int_to_baudrate( int baudrate )
         return B115200;
         break;
     }
-}
-
-static inline bool preferences_ok( preferences_object * preferences )
-{
-   return (preferences == NULL || preferences->is_initialized);
 }

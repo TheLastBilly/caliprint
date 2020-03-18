@@ -93,7 +93,21 @@ void gui_error_handle( gui_context * context )
         break;    
     case SERIAL_OK:
         snprintf( buffer, 99, "Serial connection OK.\n" );
-        break;    
+        break;
+    case NO_PREFERENCES_FILE_ERROR:
+        snprintf( buffer, 99, "No preferences file found.\n" );
+        break;
+    case PREFERENCES_FILE_ACCESS_ERROR:
+        snprintf( buffer, 99, "Cannot access preferences file.\n" );
+        should_terminate = true;
+        break;
+    case PREFERENCES_NOT_INIT_ERROR:
+        snprintf( buffer, 99, "Preferences object not initialized.\n" );
+        should_terminate = true;
+        break;
+    case PREFERENCES_OK:
+        snprintf( buffer, 99, "Preferences OK.\n" );
+        break;
     default:
         snprintf( buffer, 99, "Unknown error.\n" );
         break;

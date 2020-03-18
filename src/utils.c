@@ -24,17 +24,22 @@ bool check_for_file_access( const char * file )
 
 char * check_for_files( char * file_list[], size_t list_size )
 {
+    FILE * fp;
     for( size_t i = 0; i < list_size; i++ )
     {
-        if( check_for_file_access( file_list[i] ) )
+        fp = fopen( file_list[i] , "r" );
+        if(fp != NULL)
+        {
+            fclose(fp);
             return file_list[i];
+        }
     }
     return NULL;
 }
 
 char * allocate_string( char * str )
 {
-    size_t len = strlen(str);
+    size_t len = strlen(str)+1;
     char * ptr = calloc( 1, sizeof(char) * (len+1) );
     snprintf( ptr, len, "%s", str );
     return ptr;

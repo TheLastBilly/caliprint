@@ -6,7 +6,7 @@
 int main(int argc, char const *argv[])
 {
     gui_context * context = 
-        gui_create_context( "../assets/caliprint.glade" );
+        gui_create_context( );
     gui_init( context, &argc, &argv );
     return 0;
 }

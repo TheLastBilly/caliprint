@@ -86,7 +86,7 @@ extern bool gtk_is_init;
 gui_status gui_init( gui_context * context, int * argc, const char *** argv );
 void gui_end();
 
-gui_context * gui_create_context( const char * builder_file_path );
+gui_context * gui_create_context( );
 void gui_free_context( gui_context * context );
 
 gui_status gui_get_status( gui_context * context );

@@ -2,17 +2,17 @@
 
 bool gtk_is_init = false;
 
-static const char * glade_file_paths[] =
+static char * glade_file_paths[] =
 {
     "./caliprint.glade",
-    "../caliprint.glade",
+    "../assets/caliprint.glade",
     "/usr/share/caliprint/caliprint.glade",
 };
 
-static const char * config_file_paths[] = 
+static char * preferences_file_paths[] = 
 {
     "./caliprint.conf",
-    "../caliprint.conf",
+    "../assets/caliprint.conf",
     "~/.caliprint.conf",
 };
 
@@ -60,36 +60,52 @@ void gui_end()
     }
 }
 
-gui_context * gui_create_context( const char * builder_file_path )
+gui_context * gui_create_context(  )
 {
     //Allocate and return context
     gui_context * context =
         ( gui_context * ) calloc( 1, sizeof(gui_context) );
     
+    //Get glade file path
+    char * builder_file_path = check_for_files( glade_file_paths, 3 );
     //Check for glade file    
     if( builder_file_path == NULL )
     {
         gui_set_status(context, GTK_NO_FILE_ERROR);
         return context;
     }
-    if( access( builder_file_path, F_OK ) == -1 )
+    if( !check_for_file_access( builder_file_path ) )
     {
         gui_set_status(context, GTK_FILE_ACCESS_ERROR);
         return context;
     }
-    
+    //Allocate path in context
+    context->builder_file_path = allocate_string(builder_file_path);
 
-    //Allocate string in context    
-    size_t fp_s = strlen( builder_file_path );
-    context->builder_file_path = 
-        malloc( sizeof(char) * (fp_s + 2) );
-    snprintf( 
-        context->builder_file_path, 
-        fp_s+1, 
-        "%s", 
-        builder_file_path
-    );
-
+    //Get preferences from files
+    char * preferences_file_path = check_for_files( preferences_file_paths, 3 );
+    if( preferences_file_path == NULL )
+    {
+        //If not found, create one locally and write defaults to it
+        preferences_file_path = preferences_file_paths[0];
+        if( !check_for_file_access(preferences_file_path) )
+        {
+            gui_set_status(context, PREFERENCES_FILE_ACCESS_ERROR);
+            return context;
+        }
+        FILE * fp = fopen(preferences_file_path, "a");
+        fclose(fp);
+        context->preferences = preferences_create_from_file( preferences_file_path );
+        preferences_save( context->preferences );
+        if(preferences_get_status(context->preferences) != PREFERENCES_OK)
+        {
+            gui_set_status( context, preferences_get_status(context->preferences) );
+            return context;
+        }
+    }
+    else
+        context->preferences = preferences_create_from_file( preferences_file_path );
+ 
     context->gcode = gcode_create_params();
 
     context->status = GUI_OK;
@@ -115,6 +131,11 @@ void gui_free_context( gui_context * context )
     if(context->gcode != NULL)
     {
         gcode_free_params( context->gcode );
+    }
+
+    if(context->preferences != NULL)
+    {
+        preferences_free_object( context->preferences );
     }
 
     if( context->main_window != NULL )
