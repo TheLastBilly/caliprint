@@ -1,5 +1,7 @@
 #include "include/gui.h"
 
+extern int errno;
+
 void gui_error_print_all( gui_context * context, const char * format, ... )
 {
     va_list arg;
@@ -52,11 +54,11 @@ void gui_error_handle( gui_context * context )
         should_terminate = true;
         break;
     case GTK_NO_FILE_ERROR:
-        snprintf( buffer, 99, "Glade file \"%s\" not found.\n", context->builder_file_path );
+        snprintf( buffer, 99, "Glade file \"%s\" not found: %s\n", context->builder_file_path, strerror(errno) );
         should_terminate = true;
         break;
     case GTK_FILE_ACCESS_ERROR:
-        snprintf( buffer, 99, "Glade file (%s) cannot be accessed.\n", context->builder_file_path );
+        snprintf( buffer, 99, "Glade file (%s) cannot be accessed: %s\n", context->builder_file_path, strerror(errno) );
         should_terminate = true;
         break;    
     case GUI_OK:
@@ -71,22 +73,22 @@ void gui_error_handle( gui_context * context )
         should_terminate = true;
         break;
     case NO_SERIAL_ERROR:
-        snprintf( buffer, 99, "Cannot find find serial port \"%s\".\n", serial_get_port(context->serial) );
+        snprintf( buffer, 99, "Cannot find serial port \"%s\"\n", serial_get_port(context->serial) );
         break;
     case SERIAL_PORT_OPEN_ERROR:
-        snprintf( buffer, 99, "Cannot open \"%s\" serial port.\n", serial_get_port(context->serial) );
+        snprintf( buffer, 99, "Cannot open \"%s\" serial port: %s\n", serial_get_port(context->serial), strerror(errno) );
         break;
     case SERIAL_PORT_ATTR_GET_ERROR:
-        snprintf( buffer, 99, "Cannot get attr for \"%s\" serial port.\n", serial_get_port(context->serial) );
+        snprintf( buffer, 99, "Cannot get attr for \"%s\" serial port: %s\n", serial_get_port(context->serial), strerror(errno) );
         break;   
     case SERIAL_PORT_ATTR_SET_ERROR:
-        snprintf( buffer, 99, "Cannot set attr for \"%s\" serial port.\n", serial_get_port(context->serial) );
+        snprintf( buffer, 99, "Cannot set attr for \"%s\" serial port: %s\n", serial_get_port(context->serial), strerror(errno) );
         break;   
     case SERIAL_SEND_ERROR:
-        snprintf( buffer, 99, "Cannot send data to \"%s\" serial port.\n", serial_get_port(context->serial) );
+        snprintf( buffer, 99, "Cannot send data to \"%s\" serial port: %s\n", serial_get_port(context->serial), strerror(errno) );
         break;
     case SERIAL_READ_ERROR:
-        snprintf( buffer, 99, "Cannot read data from \"%s\" serial port.\n", serial_get_port(context->serial) );
+        snprintf( buffer, 99, "Cannot read data from \"%s\" serial port: %s\n", serial_get_port(context->serial), strerror(errno) );
         break;   
     case NOT_CONNECTED:
         snprintf( buffer, 99, "Not connected to printer.\n" );
@@ -95,10 +97,10 @@ void gui_error_handle( gui_context * context )
         snprintf( buffer, 99, "Serial connection OK.\n" );
         break;
     case NO_PREFERENCES_FILE_ERROR:
-        snprintf( buffer, 99, "No preferences file found.\n" );
+        snprintf( buffer, 99, "No preferences file \"%s\" found: Creating it...\n", context->preferences->file_path );
         break;
     case PREFERENCES_FILE_ACCESS_ERROR:
-        snprintf( buffer, 99, "Cannot access preferences file.\n" );
+        snprintf( buffer, 99, "Cannot access preferences file \"%s\": %s\n", context->preferences->file_path, strerror(errno) );
         should_terminate = true;
         break;
     case PREFERENCES_NOT_INIT_ERROR:

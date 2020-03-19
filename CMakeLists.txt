@@ -21,3 +21,5 @@ file(GLOB SOURCES
 add_executable( caliprint ${SOURCES} )
 
 TARGET_LINK_LIBRARIES( caliprint ${GTK3_LIBRARIES})
+install( TARGETS caliprint DESTINATION bin )
+install( FILES assets/caliprint.glade DESTINATION share/caliprint )

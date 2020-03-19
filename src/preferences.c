@@ -6,11 +6,6 @@ static void parse_line( preferences_object * preferences, const char * line );
 preferences_object * preferences_create_from_file( const char * file_path )
 {
     preferences_object * preferences = calloc( 1, sizeof(preferences_object) );
-    if(file_path == NULL)
-    {
-        preferences->status = NO_PREFERENCES_FILE_ERROR;
-        return preferences;
-    }
 
     //Load defaults
     preferences->serial_port = allocate_string("/dev/ttyUSB0");
@@ -19,7 +14,12 @@ preferences_object * preferences_create_from_file( const char * file_path )
     preferences->printer_width = 180.0;
     preferences->printer_lenght = 180.0;
 
-    FILE * file = fopen( file_path, "r" );
+    FILE * file = fopen( file_path, "a+" );
+    if(file == NULL)
+    {
+        preferences->status = NO_PREFERENCES_FILE_ERROR;
+        return preferences;
+    }
     parse_file( preferences, file );
     fclose(file);
 
@@ -57,8 +57,10 @@ preferences_status preferences_save( preferences_object * preferences )
         return preferences->status;
     if(!check_for_file_access(preferences->file_path))
         return (preferences->status = PREFERENCES_FILE_ACCESS_ERROR);
-    
-    FILE * file = fopen( preferences->file_path, "w" );
+    remove(preferences->file_path);
+    FILE * file = fopen( preferences->file_path, "a" );
+    if(file == NULL)
+        return NO_PREFERENCES_FILE_ERROR;
 
     fprintf(
         file,

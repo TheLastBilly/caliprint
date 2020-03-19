@@ -5,6 +5,8 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdarg.h>
+#include <pwd.h>
+#include <errno.h>
 
 #include <gtk/gtk.h>
 #include <gmodule.h>

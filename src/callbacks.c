@@ -17,7 +17,9 @@ static void update_entry_int( GtkEntry * entry, int i )
 gboolean on_main_window_destroy_callback( GtkWidget *object, gpointer user_data )
 {
     gui_context * context = (gui_context *)user_data;
-    preferences_save(context->preferences);
+    int err = preferences_save(context->preferences);
+    if(err != PREFERENCES_OK)
+        gui_error_handle_and_set(context, err);
     gui_error_handle_and_set( context, preferences_get_status(context->preferences) );
     gui_end( context );
     return true;
@@ -343,7 +345,6 @@ gboolean on_control_raise_z_pressed_callback( GtkWidget *object, gpointer user_d
     int err = serial_printf(context->serial, "%s", gcode_translate( context->gcode, GCODE_Z, context->preferences->z_level ));
     if(err != SERIAL_OK)
         gui_error_handle_and_set(context, err);
-    printf("%f\n", context->gcode->z);    
     return true;
 }
 gboolean on_control_lower_z_pressed_callback( GtkWidget *object, gpointer user_data )
@@ -352,6 +353,5 @@ gboolean on_control_lower_z_pressed_callback( GtkWidget *object, gpointer user_d
     int err = serial_printf(context->serial, "%s", gcode_translate( context->gcode, GCODE_Z, context->preferences->z_level * -1 ));
     if(err != SERIAL_OK)
         gui_error_handle_and_set(context, err);
-    printf("%f\n", context->gcode->z);    
     return true;
 }

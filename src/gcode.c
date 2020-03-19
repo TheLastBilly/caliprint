@@ -19,7 +19,6 @@ gcode_params * gcode_create( float max_x, float max_y, float max_z )
     params->max_x = max_x;
     params->max_y = max_y;
     params->max_z = max_z;
-    params->is_ready = true;
     return params;
 }
 
@@ -67,7 +66,10 @@ const char * gcode_home( gcode_params * params, gcode_axis axis )
     }
 
     if(axis == GCODE_ALL)
+    {
         a[0] = a[2] = a[4] = 0;
+        params->y = params->x = params->z = 0;
+    }
 
     snprintf( 
         params->buffer,
@@ -136,7 +138,6 @@ const char * gcode_move( gcode_params * params )
                 params->z
             );
     }
-    printf("%s\n", params->buffer);
     return params->buffer;
 }
 

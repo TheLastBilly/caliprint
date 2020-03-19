@@ -7,6 +7,7 @@ static char * glade_file_paths[] =
     "./caliprint.glade",
     "../assets/caliprint.glade",
     "/usr/share/caliprint/caliprint.glade",
+    "/usr/local/share/caliprint/caliprint.glade",
 };
 
 static char * preferences_file_paths[] = 
@@ -53,13 +54,12 @@ gui_status gui_init( gui_context * context, int * argc, const char *** argv )
 }
 
 void gui_end( gui_context * context )
-{   
+{
     if( gtk_is_init )
     {
         gtk_main_quit();
         gtk_is_init = false;
     }
-    gui_free_context(context);
 }
 
 gui_context * gui_create_context(  )
@@ -69,7 +69,7 @@ gui_context * gui_create_context(  )
         ( gui_context * ) calloc( 1, sizeof(gui_context) );
     
     //Get glade file path
-    char * builder_file_path = check_for_files( glade_file_paths, 3 );
+    char * builder_file_path = check_for_files( glade_file_paths, 4 );
     //Check for glade file    
     if( builder_file_path == NULL )
     {
@@ -85,29 +85,28 @@ gui_context * gui_create_context(  )
     context->builder_file_path = allocate_string(builder_file_path);
 
     //Get preferences from files
-    char * preferences_file_path = check_for_files( preferences_file_paths, 3 );
-    if( preferences_file_path == NULL )
+    //First, try to read the user home directory (~/.caliprint.conf)
+    char * home_dir = (getpwuid(getuid()))->pw_dir;
+    if(home_dir != NULL)
     {
-        //If not found, create one locally and write defaults to it
-        preferences_file_path = preferences_file_paths[0];
-        if( !check_for_file_access(preferences_file_path) )
-        {
-            gui_set_status(context, PREFERENCES_FILE_ACCESS_ERROR);
-            return context;
-        }
-        FILE * fp = fopen(preferences_file_path, "a");
-        fclose(fp);
-        context->preferences = preferences_create_from_file( preferences_file_path );
-        preferences_save( context->preferences );
-        if(preferences_get_status(context->preferences) != PREFERENCES_OK)
-        {
-            gui_set_status( context, preferences_get_status(context->preferences) );
-            return context;
-        }
+        const char * caliprint_dir = ".caliprint.conf";
+        size_t buffer_s = strlen(home_dir) + strlen(caliprint_dir) + 2;
+        char * buffer = malloc( sizeof(char) * (buffer_s) );
+        snprintf(buffer, buffer_s, "%s/%s", home_dir, caliprint_dir);
+        context->preferences = preferences_create_from_file( buffer );
+        free(buffer);
     }
     else
+    {
+        char * preferences_file_path = check_for_files( preferences_file_paths, 3 );
         context->preferences = preferences_create_from_file( preferences_file_path );
- 
+    }
+    if(preferences_get_status(context->preferences) != PREFERENCES_OK)
+    {
+        gui_set_status( context, preferences_get_status(context->preferences) );
+        return context;
+    }
+    
     context->gcode = gcode_create(
         context->preferences->printer_lenght,
         context->preferences->printer_width,
@@ -129,20 +128,9 @@ void gui_free_context( gui_context * context )
         free( context->builder_file_path );
     }
 
-    if(context->serial != NULL)
-    {
-        serial_free_driver( context->serial );
-    }
-
-    if(context->gcode != NULL)
-    {
-        gcode_free_params( context->gcode );
-    }
-
-    if(context->preferences != NULL)
-    {
-        preferences_free_object( context->preferences );
-    }
+    serial_free_driver( context->serial );
+    gcode_free_params( context->gcode );
+    preferences_free_object( context->preferences );
         
     free( context );
 }
