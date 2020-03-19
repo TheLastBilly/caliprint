@@ -23,6 +23,126 @@ gboolean on_main_window_destroy_callback( GtkWidget *object, gpointer user_data 
     return true;
 }
 
+//Panel Buttons
+gboolean on_control_top_pressed_callback( GtkWidget *object, gpointer user_data )
+{
+    gui_context * context = (gui_context *)user_data;
+    int err = serial_printf(context->serial, "%s", gcode_move_to( 
+        context->gcode,
+        context->gcode->max_x/2,
+        context->gcode->max_y,
+        context->gcode->z
+    ));
+    if(err != SERIAL_OK)
+        gui_error_handle_and_set(context, err);
+    return true;
+}
+gboolean on_control_left_pressed_callback( GtkWidget *object, gpointer user_data )
+{
+    gui_context * context = (gui_context *)user_data;
+    int err = serial_printf(context->serial, "%s", gcode_move_to( 
+        context->gcode,
+        0.0,
+        context->gcode->max_y/2,
+        context->gcode->z
+    ));
+    if(err != SERIAL_OK)
+        gui_error_handle_and_set(context, err);
+    return true;
+}
+gboolean on_control_right_pressed_callback( GtkWidget *object, gpointer user_data )
+{
+    gui_context * context = (gui_context *)user_data;
+    int err = serial_printf(context->serial, "%s", gcode_move_to( 
+        context->gcode,
+        context->gcode->max_x,
+        context->gcode->max_y/2,
+        context->gcode->z
+    ));
+    if(err != SERIAL_OK)
+        gui_error_handle_and_set(context, err);
+    return true;
+}
+gboolean on_control_bottom_pressed_callback( GtkWidget *object, gpointer user_data )
+{
+    gui_context * context = (gui_context *)user_data;
+    int err = serial_printf(context->serial, "%s", gcode_move_to( 
+        context->gcode,
+        context->gcode->max_x/2,
+        0,
+        context->gcode->z
+    ));
+    if(err != SERIAL_OK)
+        gui_error_handle_and_set(context, err);
+    return true;
+}
+gboolean on_control_top_left_pressed_callback( GtkWidget *object, gpointer user_data )
+{
+    gui_context * context = (gui_context *)user_data;
+    int err = serial_printf(context->serial, "%s", gcode_move_to( 
+        context->gcode,
+        0.0,
+        context->gcode->max_y,
+        context->gcode->z
+    ));
+    if(err != SERIAL_OK)
+        gui_error_handle_and_set(context, err);
+    return true;
+}
+gboolean on_control_top_right_pressed_callback( GtkWidget *object, gpointer user_data )
+{
+    gui_context * context = (gui_context *)user_data;
+    int err = serial_printf(context->serial, "%s", gcode_move_to( 
+        context->gcode,
+        context->gcode->max_x,
+        context->gcode->max_y,
+        context->gcode->z
+    ));
+    if(err != SERIAL_OK)
+        gui_error_handle_and_set(context, err);
+    return true;
+}
+gboolean on_control_bottom_left_pressed_callback( GtkWidget *object, gpointer user_data )
+{
+    gui_context * context = (gui_context *)user_data;
+    int err = serial_printf(context->serial, "%s", gcode_move_to( 
+        context->gcode,
+        0.0,
+        0.0,
+        context->gcode->z
+    ));
+    if(err != SERIAL_OK)
+        gui_error_handle_and_set(context, err);
+    return true;
+}
+gboolean on_control_bottom_right_pressed_callback( GtkWidget *object, gpointer user_data )
+{
+    gui_context * context = (gui_context *)user_data;
+    int err = serial_printf(context->serial, "%s", gcode_move_to( 
+        context->gcode,
+        context->gcode->max_x,
+        0.0,
+        context->gcode->z
+    ));
+    if(err != SERIAL_OK)
+        gui_error_handle_and_set(context, err);
+    return true;
+}
+gboolean on_control_center_pressed_callback( GtkWidget *object, gpointer user_data )
+{
+    gui_context * context = (gui_context *)user_data;
+    int err = serial_printf(context->serial, "%s", gcode_move_to( 
+        context->gcode,
+        context->gcode->max_x/2,
+        context->gcode->max_y/2,
+        context->gcode->z
+    ));
+    if(err != SERIAL_OK)
+        gui_error_handle_and_set(context, err);
+    return true;
+}
+
+
 //Connect Button
 gboolean on_control_connect_pressed_callback( GtkWidget *object, gpointer user_data )
 {

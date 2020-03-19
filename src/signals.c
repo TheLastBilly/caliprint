@@ -159,6 +159,132 @@ void gui_connect_signals( gui_context * context )
         context
     );
 
+    //TOP
+    context->control_top = GTK_BUTTON(
+        gtk_builder_get_object(
+            context->builder,
+            "control_top"
+        )
+    );
+    g_signal_connect(
+        context->control_top,
+        "clicked",
+        G_CALLBACK(on_control_top_pressed_callback),
+        context
+    );
+
+    //LEFT
+    context->control_left = GTK_BUTTON(
+        gtk_builder_get_object(
+            context->builder,
+            "control_left"
+        )
+    );
+    g_signal_connect(
+        context->control_left,
+        "clicked",
+        G_CALLBACK(on_control_left_pressed_callback),
+        context
+    );
+
+    //RIGHT
+    context->control_right = GTK_BUTTON(
+        gtk_builder_get_object(
+            context->builder,
+            "control_right"
+        )
+    );
+    g_signal_connect(
+        context->control_right,
+        "clicked",
+        G_CALLBACK(on_control_right_pressed_callback),
+        context
+    );
+
+    //BOTTOM
+    context->control_bottom = GTK_BUTTON(
+        gtk_builder_get_object(
+            context->builder,
+            "control_bottom"
+        )
+    );
+    g_signal_connect(
+        context->control_bottom,
+        "clicked",
+        G_CALLBACK(on_control_bottom_pressed_callback),
+        context
+    );
+
+    //TOP LEFT
+    context->control_top_left = GTK_BUTTON(
+        gtk_builder_get_object(
+            context->builder,
+            "control_top_left"
+        )
+    );
+    g_signal_connect(
+        context->control_top_left,
+        "clicked",
+        G_CALLBACK(on_control_top_left_pressed_callback),
+        context
+    );
+
+    //TOP RIGHT
+    context->control_top_right = GTK_BUTTON(
+        gtk_builder_get_object(
+            context->builder,
+            "control_top_right"
+        )
+    );
+    g_signal_connect(
+        context->control_top_right,
+        "clicked",
+        G_CALLBACK(on_control_top_right_pressed_callback),
+        context
+    );
+
+    //BOTTOM LEFT
+    context->control_bottom_left = GTK_BUTTON(
+        gtk_builder_get_object(
+            context->builder,
+            "control_bottom_left"
+        )
+    );
+    g_signal_connect(
+        context->control_bottom_left,
+        "clicked",
+        G_CALLBACK(on_control_bottom_left_pressed_callback),
+        context
+    );
+
+    //BOTTOM RIGHT
+    context->control_bottom_right = GTK_BUTTON(
+        gtk_builder_get_object(
+            context->builder,
+            "control_bottom_right"
+        )
+    );
+    g_signal_connect(
+        context->control_bottom_right,
+        "clicked",
+        G_CALLBACK(on_control_bottom_right_pressed_callback),
+        context
+    );
+
+    //CENTER
+    context->control_center = GTK_BUTTON(
+        gtk_builder_get_object(
+            context->builder,
+            "control_center"
+        )
+    );
+    g_signal_connect(
+        context->control_center,
+        "clicked",
+        G_CALLBACK(on_control_center_pressed_callback),
+        context
+    );
+
     // #########
     // TextViews
     // #########
