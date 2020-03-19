@@ -90,7 +90,7 @@ const char * gcode_move( gcode_params * params )
         snprintf( 
             params->buffer, 
             GCODE_PARAMS_MAX_BUFFER,
-            "G%d ", 
+            "G90\nG%d ", 
             (params->is_linear ? 1 : 0) 
         );
 
@@ -136,7 +136,7 @@ const char * gcode_move( gcode_params * params )
                 params->z
             );
     }
-
+    printf("%s\n", params->buffer);
     return params->buffer;
 }
 
