@@ -48,7 +48,16 @@ typedef struct gui_context
         * control_home_y,
         * control_home_z,
         * control_raise_z,
-        * control_lower_z;
+        * control_lower_z,
+        * control_top,
+        * control_left,
+        * control_right,
+        * control_bottom,
+        * control_top_left,
+        * control_top_right,
+        * control_bottom_left,
+        * control_bottom_right,
+        * control_center;
     
     GtkEntry
         * control_z_level,
@@ -107,6 +116,17 @@ void gui_apply_preferences( gui_context * context );
 
 //Main Window
 gboolean on_main_window_destroy_callback( GtkWidget *object, gpointer user_data );
+
+//Panel Buttons
+gboolean on_control_top_pressed_callback( GtkWidget *object, gpointer user_data );
+gboolean on_control_left_pressed_callback( GtkWidget *object, gpointer user_data );
+gboolean on_control_right_pressed_callback( GtkWidget *object, gpointer user_data );
+gboolean on_control_bottom_pressed_callback( GtkWidget *object, gpointer user_data );
+gboolean on_control_top_left_pressed_callback( GtkWidget *object, gpointer user_data );
+gboolean on_control_top_right_pressed_callback( GtkWidget *object, gpointer user_data );
+gboolean on_control_bottom_left_pressed_callback( GtkWidget *object, gpointer user_data );
+gboolean on_control_bottom_right_pressed_callback( GtkWidget *object, gpointer user_data );
+gboolean on_control_center_pressed_callback( GtkWidget *object, gpointer user_data );
 
 //Home Buttons
 gboolean on_control_home_pressed_callback( GtkWidget *object, gpointer user_data );
