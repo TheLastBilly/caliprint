@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Caliprint
+Comment=3D printer calibration utility
+Exec=caliprint
+Icon=/usr/local/share/caliprint/caliprint.png
+Type=Application
+Categories=Utilities;

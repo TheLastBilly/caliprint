@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project ("caliprint" VERSION 0.1)
 
-add_compile_options(-std=c11 -Wall -O2 -g)
+add_compile_options(-std=c11 -Wall -O2)
 
 include(CPack)
 
@@ -23,3 +23,5 @@ add_executable( caliprint ${SOURCES} )
 TARGET_LINK_LIBRARIES( caliprint ${GTK3_LIBRARIES})
 install( TARGETS caliprint DESTINATION bin )
 install( FILES assets/caliprint.glade DESTINATION share/caliprint )
+install( FILES assets/caliprint.png DESTINATION share/caliprint )
+install( FILES assets/caliprint.desktop DESTINATION share/applications )

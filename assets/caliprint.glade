@@ -7,6 +7,7 @@
     <property name="title" translatable="yes">Caliprint</property>
     <property name="default_width">600</property>
     <property name="default_height">400</property>
+    <property name="icon">caliprint.png</property>
     <child type="titlebar">
       <object class="GtkHeaderBar">
         <property name="visible">True</property>
@@ -180,20 +181,6 @@
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="margin_top">4</property>
-                    <property name="margin_bottom">4</property>
-                    <property name="label" translatable="yes">Log</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkScrolledWindow" id="control_log_sw">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -228,20 +215,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="margin_top">4</property>
-                    <property name="margin_bottom">4</property>
-                    <property name="label" translatable="yes">Home Axis</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
                 <child>
                   <object class="GtkButton" id="control_home">
                     <property name="label" translatable="yes">Home</property>
@@ -368,6 +341,7 @@
     <property name="title" translatable="yes">Preferences</property>
     <property name="default_width">100</property>
     <property name="default_height">250</property>
+    <property name="icon">caliprint.png</property>
     <child>
       <placeholder/>
     </child>
